@@ -3,39 +3,51 @@
 # Structures and types overview
 
     Sequencer
-  
-      * Track
+
+      * Pattern
     
-        * Pattern [SynthPattern|DrumPattern]
-       
-          * Event [NoteEvent|DrumEvent]
+        * Track
       
-      
+          * Channel [SynthChannel|DrumChannel]
+         
+            * Event [NoteEvent|DrumEvent]
+
 ## Sequencer
+      
+   Given a set of Patterns the sequencer will generate a stream of steps. 
+   
+## Transport
 
-  The sequencer is the top level structure. It controls the clock and groups the patterns.
+  Controls playback.
+
+  Given a Clock, i/o ports and a Sequencer it will merge the clock pulses with the sequencer steps
+    and generate midi messages which will be sent to the output ports. 
+      
+## Pattern
+
+  The pattern is a container for tracks.
   
-## Track and patterns.
+## Track and channels.
 
-  Tracks aggregate Patterns which in turn aggregate sequences of events.
+  Tracks aggregate Channels which in turn aggregate sequences of events.
    
   Tracks declare a midi channel and a step length. 
   
-  Drum Patterns declare a Note.
+  Drum Channels declare a Note.
   
-  All tracks in a pattern are of the same length, but there is no such restriction for tracks. 
+  All tracks in a channel are of the same length, but there is no such restriction for tracks. 
    
-  Pattern events for a track are produced at the same time in a step; 
+  Channel events for a track are produced at the same time in a step; 
     for a synth it means many notes are emitted providing polyphony where supported, 
-    for a drum, each patterns is an instrument.
+    for a drum, each channels is an instrument.
     
     
 ###  TODO
 
-  * Make patterns length be restricted by the tracks step length.
+  * Make channels length be restricted by the tracks step length.
      - for the time being, check on "play".
      
   
 ## Clock, Time signature, etc.
 
-   The sequencer should be able to define time signatures. 
+   The pattern should be able to define time signatures. 

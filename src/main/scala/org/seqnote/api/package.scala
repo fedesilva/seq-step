@@ -1,4 +1,4 @@
-package org.seqnote.api
+package org.seqnote
 
 import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
@@ -20,7 +20,7 @@ import shapeless.Nat._
   * Created by f on 19/5/17.
   *
   */
-object Refinements {
+package object api {
   
   
   /** Allowed values range for midi values: 0 to 127  */

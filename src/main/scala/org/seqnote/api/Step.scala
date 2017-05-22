@@ -1,7 +1,5 @@
 package org.seqnote.api
 
-import org.seqnote.api.Refinements.{MIDIValue, Octave, StepLength}
-
 /**
   * Created by f on 19/5/17.
   */
@@ -11,7 +9,7 @@ sealed trait Step {
 
 case class NoteStep(
   index:    StepLength,
-  note:     Note,
+  note:     Note, // FIXME Consider changing to interval (and putting note in the track.
   octave:   Octave,
   duration: MIDIValue,
   velocity: MIDIValue
