@@ -1,7 +1,6 @@
 package org.seqnote.api
 
 import eu.timepit.refined.refineMV
-import org.seqnote.api.Refinements.{MIDIValue, StepLength, StepLengthRange}
 
 /**
   * Created by f on 19/5/17.
