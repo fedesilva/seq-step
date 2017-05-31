@@ -3,6 +3,7 @@ import java.time.{LocalDateTime, ZoneId}
 
 import fs2._
 
+import scala.collection.mutable
 import scala.concurrent.duration._
 
 // To Do List
@@ -17,18 +18,16 @@ implicit val strategy: Strategy   = Strategy.fromFixedDaemonPool(2)
 
 val zone = ZoneId.of("America/Montevideo")
 
+val tickInterrupter = time.sleep[Task](15.seconds).map( _ => true) ++ Stream(true)
+
+val tint = fs2.async.signalOf[Task, Boolean](false)
+val tints = tint.flatMap(s => s.modify( _ => true))
+
 val ta = time.awakeEvery[Task](250.millis).map{ duration =>
   val now = LocalDateTime.now(ZoneId.of("America/Montevideo"))
   println(s"${duration.toMillis} at $now")
-  duration -> now
-}
-
-val t = time.every[Task](250.millis).map{ flag =>
-  val now = LocalDateTime.now(zone)
-  println(s" $flag at $now")
-  flag -> now
-}
-
+  duration.toMillis -> now
+}.interruptWhen(tickInterrupter)
 
 val sl = Stream.emits(List(1,2,3)).repeat
 
