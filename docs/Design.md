@@ -14,32 +14,33 @@
 
 ## Sequencer
       
-   Given a set of Patterns the sequencer will generate a stream of steps. 
-   
+    
 ## Transport
 
   Controls playback.
 
-  Given a Clock, i/o ports and a Sequencer it will merge the clock pulses with the sequencer steps
-    and generate midi messages which will be sent to the output ports. 
-      
+  Given a Clock, i/o ports and a Sequencer it will emit midi messages using the sequencer steps each tick
+    of the clock.
+    
 ## Pattern
 
   The pattern is a container for tracks.
   
-## Track and channels.
+## Track and Channels and Steps.
 
-  Tracks aggregate Channels which in turn aggregate sequences of events.
+  Tracks aggregate Channels which in turn aggregate sequences of steps.
    
   Tracks declare a midi channel and a step length. 
   
-  Drum Channels declare a Note.
-  
-  All tracks in a channel are of the same length, but there is no such restriction for tracks. 
-   
-  Channel events for a track are produced at the same time in a step; 
+  All tracks in a channel are of the same length, but there is no such restriction for tracks in a pattern.
+      
+  All steps in a track no matter which channel are emitted at the same time; 
     for a synth it means many notes are emitted providing polyphony where supported, 
-    for a drum, each channels is an instrument.
+    for a drum, each channel is an instrument.
+  
+  Drum Channels declare a Note besides the steps.
+    
+  Steps are also different depending on the type of step. Drum steps don't define a note or duration for example.
     
     
 ###  TODO
