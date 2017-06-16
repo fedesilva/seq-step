@@ -23,6 +23,9 @@ val tickInterrupter = time.sleep[Task](15.seconds).map( _ => true) ++ Stream(tru
 val tint = fs2.async.signalOf[Task, Boolean](false)
 val tints = tint.flatMap(s => s.modify( _ => true))
 
+
+
+
 val ta = time.awakeEvery[Task](250.millis).map{ duration =>
   val now = LocalDateTime.now(ZoneId.of("America/Montevideo"))
   println(s"${duration.toMillis} at $now")
@@ -36,6 +39,7 @@ val zipped = ta.zip(sl).map{
   println(c)
   (a,b,c)
 }
+
 
 val runEff = zipped.runLog
 

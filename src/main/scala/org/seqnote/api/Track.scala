@@ -2,28 +2,50 @@ package org.seqnote.api
 
 import eu.timepit.refined.refineMV
 
+import scala.collection.immutable.SortedMap
+
+
+object Track {
+  
+  def defaultDrumChannels: SparseIndexedSeq[DrumChannel] = {
+    val channels =
+      Note.all
+        .take(8)
+        .zipWithIndex
+        .map { case (n, i) =>
+          i -> DrumChannel(n, DefaultOctave, steps = SparseIndexedSeq())
+        }
+    SortedMap[Int, DrumChannel](channels :_*)
+  }
+      
+      
+  
+}
+
+
+
 /**
   * Created by f on 19/5/17.
   */
-sealed trait Track[T <: Channel[_]] {
+sealed trait Track {
   
-  val channel:    MIDIValue
-  val stepLength: StepLength
-  val channels:   IndexedSeq[T]
+  val midiChannel: MIDIValue
+  val channels: SparseIndexedSeq[Channel]
+  
+  // hardcoded until I implement measures (16 = 4x4).
+  val stepLength : StepLength = refineMV[StepLengthRange](16)
   
 }
 
 final case class SynthTrack(
-  channel:    MIDIValue,
-  stepLength: StepLength = refineMV[StepLengthRange](16),
-  channels:   IndexedSeq[SynthChannel]
-) extends Track[SynthChannel]
+  midiChannel: MIDIValue,
+  channels: SparseIndexedSeq[SynthChannel] = SparseIndexedSeq()
+) extends Track
 
 final case class DrumTrack(
-  channel:    MIDIValue,
-  stepLength: StepLength = refineMV[StepLengthRange](16),
-  channels:   IndexedSeq[DrumChannel]
-) extends Track[DrumChannel]
+  midiChannel: MIDIValue,
+  channels: SparseIndexedSeq[DrumChannel] = Track.defaultDrumChannels
+) extends Track
 
 
 

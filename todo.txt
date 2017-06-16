@@ -1,0 +1,12 @@
+
+
+* Add rest of todo
+
+* Finish Model
+* MIDI
+  +  script
+    - device acquisition
+    - send test notes
+  + Create interface and utilities
+
+* Connect the dots and test

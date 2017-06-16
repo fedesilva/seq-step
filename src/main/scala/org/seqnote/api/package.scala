@@ -6,6 +6,8 @@ import eu.timepit.refined.boolean.And
 import eu.timepit.refined.numeric._
 import shapeless.Nat._
 
+import scala.collection.immutable.{IntMap, SortedMap}
+
 /** Refinement types for values in the api.
   *
   * Notice that ranged types should be split into a range declaration and a the ranged type.
@@ -22,6 +24,11 @@ import shapeless.Nat._
   */
 package object api {
   
+  type SparseIndexedSeq[T] = SortedMap[Int, T]
+  
+  object SparseIndexedSeq {
+    def apply[T](): SparseIndexedSeq[T] = SortedMap[Int,T]()
+  }
   
   /** Allowed values range for midi values: 0 to 127  */
   type MIDIRange = And[GreaterEqual[_0], LessEqual[W.`127`.T]]
@@ -40,6 +47,8 @@ package object api {
   
   /** Helper to create a valid octave value */
   def octave(i:Int): Either[String, Refined[Int, OctaveRange]] = refineV[OctaveRange](i)
+  
+  val DefaultOctave = refineMV[OctaveRange](1)
   
   /** Allowed step length values range for tracks step length */
   type StepLengthRange = And[GreaterEqual[_1], LessEqual[W.`256`.T]]
