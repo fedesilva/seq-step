@@ -18,16 +18,17 @@ import scala.collection.immutable.{IntMap, SortedMap}
   * Also notice there are functions that use the range to validate, this functions are declared here to avoid having
   * to flood the client code with `refined` imports.
   *
-  *
   * Created by f on 19/5/17.
   *
   */
 package object api {
   
-  type SparseIndexedSeq[T] = SortedMap[Int, T]
+  /** A sorted map with int keys */
+  type SortedIntMap[T] = SortedMap[Int, T]
   
-  object SparseIndexedSeq {
-    def apply[T](): SparseIndexedSeq[T] = SortedMap[Int,T]()
+  /** Constructor for sorted maps with int keys */
+  object SortedIntMap {
+    def apply[T](): SortedIntMap[T] = SortedMap[Int,T]()
   }
   
   /** Allowed values range for midi values: 0 to 127  */
@@ -48,7 +49,7 @@ package object api {
   /** Helper to create a valid octave value */
   def octave(i:Int): Either[String, Refined[Int, OctaveRange]] = refineV[OctaveRange](i)
   
-  val DefaultOctave = refineMV[OctaveRange](1)
+  val DefaultOctave: Refined[Int, OctaveRange] = refineMV[OctaveRange](1)
   
   /** Allowed step length values range for tracks step length */
   type StepLengthRange = And[GreaterEqual[_1], LessEqual[W.`256`.T]]
@@ -58,8 +59,5 @@ package object api {
   
   /** Helper to create a valid step length value */
   def stepLength(i: Int): Either[String, Refined[Int, StepLengthRange]] = refineV[StepLengthRange](i)
-  
-  
-  
   
 }

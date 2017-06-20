@@ -1,56 +1,55 @@
 package org.seqnote.api
 
-import eu.timepit.refined._
+
+import org.seqnote.api.Track.TrackMaker
 
 import scala.util.Try
 
 
 object Sequencer {
   
-  def apply() = new Sequencer(SparseIndexedSeq())
-  def apply(patterns: SparseIndexedSeq[Pattern]) = new Sequencer(patterns)
+  /** New empty sequencer with an empty pattern */
+  def apply(): Sequencer = {
+    val p = Pattern(SortedIntMap())
+    val ps = SortedIntMap() + (0 -> p)
+    new Sequencer(ps)
+  }
   
+  /** New Sequencer using the passed patterns */
+  def apply(patterns: SortedIntMap[Pattern]): Sequencer = new Sequencer(patterns)
+  
+  /** A sequencer with default tracks */
+  def initialized: Sequencer = {
+    val seq = Sequencer()
+    (1 to 2).flatMap( i => midiint(i).toOption ).foldLeft(seq){ (s, v) =>
+      if (v.value > 1) {
+        s.addTrack[SynthTrack](0,v).fold( x =>{println(x); s }, identity)
+      }
+      else {
+        s.addTrack[DrumTrack](0, v).fold( x =>{println(x); s }, identity)
+      }
+    }
+  }
+  
+  /** Syntax methods for building manipulating sequencer instances */
   implicit class Builder(seq: Sequencer) {
-    
-    def initialize: Sequencer = {
-      val p = Pattern(SparseIndexedSeq())
-      seq.copy(patterns = seq.patterns + (seq.patterns.size -> p))
-    }
-    
-    // Fucking have a look at monocle
-    def addSynthTrack(patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
+   
+    def addTrack[T <: Track: Track.TrackMaker](patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
       Try(seq.patterns(patIndex)).map { p =>
-        val t   = SynthTrack(midiChannel)
-        val pt  = p.copy( tracks = p.tracks + (p.tracks.size -> t) )
+        val t   = TrackMaker.make(midiChannel)
+        val key = if(p.tracks.isEmpty) 1 else p.tracks.keySet.max + 1
+        val pt  = p.copy( tracks = p.tracks + (key -> t) )
         val ps  = seq.patterns + (patIndex -> pt)
         seq.copy(patterns = ps)
       }
       .toEither.left.map(_.getMessage)
-      
     }
-  
-    def addDrumTrack(patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
-      Try(seq.patterns(patIndex)).map { p =>
-        val t   = DrumTrack(midiChannel)
-        val pt  = p.copy( tracks = p.tracks + (p.tracks.size -> t) )
-        val ps  = seq.patterns + (patIndex -> pt)
-        seq.copy(patterns = ps)
-      }
-      .toEither.left.map(_.getMessage)
-    
-    }
-    
-    
     
   }
   
 }
 
 /**
-  * Created by f on 16/6/17.
+  *
   */
-case class Sequencer(patterns: SparseIndexedSeq[Pattern]) {
-  
-  
-  
-}
+case class Sequencer(patterns: SortedIntMap[Pattern])

@@ -7,15 +7,15 @@ package org.seqnote.api
   * Created by f on 18/5/17.
   */
 sealed trait Channel {
-  val steps: SparseIndexedSeq[Step]
+  val steps: SortedIntMap[Step]
 }
 
 final case class SynthChannel(
-  steps: SparseIndexedSeq[NoteStep]
+  steps: SortedIntMap[NoteStep]
 ) extends Channel
 
 final case class DrumChannel(
   note:   Note,
   octave: Octave,
-  steps: SparseIndexedSeq[DrumStep]
+  steps: SortedIntMap[DrumStep]
 ) extends Channel
