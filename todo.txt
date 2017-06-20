@@ -1,8 +1,9 @@
 
 
 * Finish model.
-  - render steps
-  - methods to add steps (syntax like builder for sequencer
+  - -> render steps
+    - add steps manually in seq.scala script to check render methods.
+  - methods to add steps (syntax like builder for sequencer)
 
 * MIDI
   +  script
@@ -11,3 +12,6 @@
   + Create interface and utilities
 
 * Connect the dots and test
+
+
+
