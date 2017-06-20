@@ -1,8 +1,6 @@
 package org.seqstep.api
 
 
-import org.seqstep.api.Track.TrackMaker
-
 import scala.util.Try
 
 /** Top level container of patterns */
@@ -22,6 +20,7 @@ object Sequencer {
   
   /** A sequencer with default tracks */
   def initialized: Sequencer = {
+    
     val seq = Sequencer()
     (1 to 2).flatMap( i => midiint(i).toOption ).foldLeft(seq){ (s, v) =>
       if (v.value > 1) {
@@ -34,13 +33,13 @@ object Sequencer {
   }
   
   /** Syntax methods for building manipulating sequencer instances */
-  implicit class Builder(seq: Sequencer) {
+  implicit class Syntax(seq: Sequencer) {
    
-    def addTrack[T <: Track: Track.TrackMaker](patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
+    def addTrack[T <: Track: TrackMaker](patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
       Try(seq.patterns(patIndex)).map { p =>
         val t   = TrackMaker.make(midiChannel)
-        // FIXME EEEEEK, use monocle
         val key = if(p.tracks.isEmpty) 1 else p.tracks.keySet.max + 1
+        // FIXME EEEEEK, use monocle
         val pt  = p.copy( tracks = p.tracks + (key -> t) )
         val ps  = seq.patterns + (patIndex -> pt)
         seq.copy(patterns = ps)

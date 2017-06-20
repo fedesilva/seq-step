@@ -6,15 +6,18 @@ package org.seqstep.api
 sealed trait Step
 
 case class NoteStep(
-  note:     Note, // FIXME Consider changing to interval (and putting note in the track.
+  note:     Note, 
   octave:   Octave,
-  duration: MIDIValue,
+  duration: Int,
   velocity: MIDIValue
 ) extends Step
 
-case class DrumStep(
-  instrument:   MIDIValue,
-  velocity:     MIDIValue
-) extends Step
+case class DrumStep(velocity: MIDIValue) extends Step
 
-case object OffStep extends Step
+case class OffStep(note: Note, octave: Octave) extends Step
+
+
+
+
+
+

@@ -29,9 +29,11 @@ final case class DrumTrack(
 
 object Track {
 
-  /** Channels in drum machines are instruments, and have fixed per each.
+  /** Setup default drum channels.
     *
+    * Channels in drum machines are instruments, and have fixed notes each.
     * Using the first eight semitones of the default octave is a common setup.
+    *
     */
   def defaultDrumChannels: SortedIntMap[DrumChannel] = {
     val channels =
@@ -44,31 +46,24 @@ object Track {
     SortedMap[Int, DrumChannel](channels :_*)
   }
   
-  object TrackMaker {
-    def make[T <: Track](midiChannel: MIDIValue)(implicit b: TrackMaker[T]): T = b.make(midiChannel)
-  }
-  
-  trait TrackMaker[T <: Track] {
-    def make(midiChannel: MIDIValue): T
-  }
-  
-  implicit val synthTrackBuilder = new TrackMaker[SynthTrack]{
-    override def make(midiChannel: MIDIValue): SynthTrack = SynthTrack(refineMV[MIDIRange](1))
-  }
-  
-  implicit val drumTrackBuilder = new TrackMaker[DrumTrack]{
-    override def make(midiChannel: MIDIValue): DrumTrack = DrumTrack(refineMV[MIDIRange](1))
-  }
   
 }
 
-trait RenderTrack {
+trait TrackMaker[T <: Track] {
+  def make(midiChannel: MIDIValue): T
+}
+
+object TrackMaker {
   
-  // Merge all channels, put notes from all channels into one key ([Int,Step])
-  // For each step, generate a corresponding note off step.
-  // The purpose of doing it once and not directly as needed is to have the computation done
-  // on a single place and not later during playback.
+  def make[T <: Track](midiChannel: MIDIValue)(implicit b: TrackMaker[T]): T = b.make(midiChannel)
   
+  implicit val synthTrackBuilder = new TrackMaker[SynthTrack] {
+    override def make(midiChannel: MIDIValue): SynthTrack = SynthTrack(refineMV[MIDIRange](1))
+  }
+  
+  implicit val drumTrackBuilder = new TrackMaker[DrumTrack] {
+    override def make(midiChannel: MIDIValue): DrumTrack = DrumTrack(refineMV[MIDIRange](1))
+  }
   
   
 }
