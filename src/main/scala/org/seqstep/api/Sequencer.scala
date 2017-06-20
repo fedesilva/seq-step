@@ -1,10 +1,12 @@
-package org.seqnote.api
+package org.seqstep.api
 
 
-import org.seqnote.api.Track.TrackMaker
+import org.seqstep.api.Track.TrackMaker
 
 import scala.util.Try
 
+/** Top level container of patterns */
+case class Sequencer(patterns: SortedIntMap[Pattern])
 
 object Sequencer {
   
@@ -37,6 +39,7 @@ object Sequencer {
     def addTrack[T <: Track: Track.TrackMaker](patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
       Try(seq.patterns(patIndex)).map { p =>
         val t   = TrackMaker.make(midiChannel)
+        // FIXME EEEEEK, use monocle
         val key = if(p.tracks.isEmpty) 1 else p.tracks.keySet.max + 1
         val pt  = p.copy( tracks = p.tracks + (key -> t) )
         val ps  = seq.patterns + (patIndex -> pt)
@@ -49,7 +52,4 @@ object Sequencer {
   
 }
 
-/**
-  *
-  */
-case class Sequencer(patterns: SortedIntMap[Pattern])
+

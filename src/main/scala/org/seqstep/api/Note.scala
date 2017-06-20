@@ -1,4 +1,4 @@
-package org.seqnote.api
+package org.seqstep.api
 
 /**
   * Created by f on 18/5/17.

@@ -1,8 +1,9 @@
 
 
-* Add rest of todo
+* Finish model.
+  - render steps
+  - methods to add steps (syntax like builder for sequencer
 
-* Finish Model
 * MIDI
   +  script
     - device acquisition

@@ -1,4 +1,4 @@
-package org.seqnote
+package org.seqstep
 
 import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
