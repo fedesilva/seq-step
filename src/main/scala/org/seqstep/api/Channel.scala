@@ -1,7 +1,5 @@
 package org.seqstep.api
 
-import scala.collection.immutable.SortedMap
-
 /** A sequence of Steps.
   *
   * FIXME make it so that the steps collections is refined to the `stepLength` of the track.
@@ -9,20 +7,20 @@ import scala.collection.immutable.SortedMap
   * Created by f on 18/5/17.
   */
 sealed trait Channel {
-  val steps: SortedIntMap[Seq[Step]]
+  val steps: SortedIntMap[Step]
 }
 
 final case class SynthChannel(
-  steps: SortedIntMap[Seq[NoteStep]]
+  steps: SortedIntMap[NoteStep]
 ) extends Channel
 
 final case class DrumChannel(
   note:   Note,
   octave: Octave,
-  steps:  SortedIntMap[Seq[DrumStep]]
+  steps:  SortedIntMap[DrumStep]
 ) extends Channel
 
-final case class RenderedChannel(steps: SortedIntMap[Seq[Step]]) extends Channel
+final case class RenderedChannel(steps: SortedIntMap[Vector[RenderedStep]])
 
 
 /** Channel rendering type class allows rendering control steps before playback.
@@ -47,11 +45,10 @@ object ChannelRenderer {
   
   implicit val drumChannelRenderer = new ChannelRenderer[DrumChannel] {
     override def render(c: DrumChannel): RenderedChannel = {
-      val ss = c.steps.map { case (idx, events) =>
-        val es = events.flatMap{ d =>
-          val off = OffStep(c.note,c.octave)
-          Seq(d, off)
-        }
+      val ss = c.steps.map { case (idx, step) =>
+        val on  = RenderedNoteStep(c.note, c.octave, step.velocity)
+        val off = RenderedNoteOffStep(c.note,c.octave)
+        val es  = Vector(on , off)
         (idx, es)
       }
       RenderedChannel(ss)
@@ -60,15 +57,15 @@ object ChannelRenderer {
   
   implicit val synthChannelRenderer = new ChannelRenderer[SynthChannel] {
     override def render(c: SynthChannel): RenderedChannel = {
-      val ss = c.steps.flatMap { case (idx, events) =>
+      val ss = c.steps.flatMap { case (idx, step) =>
         // new events, with their index
-        events.flatMap { n =>
-          val nix = idx + n.duration
-          Seq(nix -> OffStep(n.note, n.octave), idx -> n)
-        }
-        .groupBy { case (k, _) => k }
-        .map { case (k, v) => k -> v.map { case (_, x) => x } }
-        .toSeq
+        val nix = idx + step.duration
+        val on  = RenderedNoteStep(step.note, step.octave, step.velocity)
+        val off = RenderedNoteOffStep(step.note, step.octave)
+        Vector(idx -> on, nix -> off)
+          .groupBy(_._1)
+          .map{ case (k, v) => k -> v.map{ case (_, x) => x } }
+          
       }
       RenderedChannel(ss)
     }
