@@ -1,9 +1,7 @@
 
-
 * Finish model.
-  - -> render steps
-    - add steps manually in seq.scala script to check render methods.
   - methods to add steps (syntax like builder for sequencer)
+    work with monocle
 
 * MIDI
   +  script
