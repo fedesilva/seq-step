@@ -3,15 +3,19 @@ package org.seqstep.api
 
 import scala.util.Try
 
-/** Top level container of patterns */
+/** Top level container of patterns.
+  *
+  * @param patterns patterns this sequencer holds.
+  *
+  */
 case class Sequencer(patterns: SortedIntMap[Pattern])
 
 object Sequencer {
   
   /** New empty sequencer with an empty pattern */
   def apply(): Sequencer = {
-    val p = Pattern(SortedIntMap())
-    val ps = SortedIntMap() + (0 -> p)
+    val p   = Pattern(SortedIntMap())
+    val ps  = SortedIntMap() + (0 -> p)
     new Sequencer(ps)
   }
   
@@ -32,10 +36,12 @@ object Sequencer {
     }
   }
   
-  /** Syntax methods for building manipulating sequencer instances */
+  /** Syntax methods for manipulating sequencer instances */
   implicit class Syntax(seq: Sequencer) {
    
-    def addTrack[T <: Track: TrackMaker](patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
+    def addTrack[T <: Track: TrackMaker]
+                (patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
+      
       Try(seq.patterns(patIndex)).map { p =>
         val t   = TrackMaker.make(midiChannel)
         val key = if(p.tracks.isEmpty) 1 else p.tracks.keySet.max + 1
@@ -45,6 +51,7 @@ object Sequencer {
         seq.copy(patterns = ps)
       }
       .toEither.left.map(_.getMessage)
+      
     }
     
   }

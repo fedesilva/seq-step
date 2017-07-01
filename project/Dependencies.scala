@@ -15,7 +15,8 @@ object Dependencies {
   )
   
   lazy val testDeps = Seq(
-    "org.scalatest" %% "scalatest" % "3.0.1"
+    "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+    "com.github.julien-truffaut" %%  "monocle-law"   % monocleVersion % "test"
   )
   
   

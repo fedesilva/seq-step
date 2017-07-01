@@ -65,7 +65,6 @@ object TrackMaker {
     override def make(midiChannel: MIDIValue): DrumTrack = DrumTrack(refineMV[MIDIRange](1))
   }
   
-  
 }
 
 
