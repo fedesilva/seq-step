@@ -1,7 +1,7 @@
 
 * Finish model.
   - methods to add steps (syntax like builder for sequencer)
-    work with monocle
+    - work with monocle
 
 * MIDI
   +  script
