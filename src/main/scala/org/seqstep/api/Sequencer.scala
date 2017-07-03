@@ -5,10 +5,10 @@ import scala.util.Try
 
 /** Top level container of patterns.
   *
-  * @param patterns patterns this sequencer holds.
+  * @param tracks patterns this sequencer holds.
   *
   */
-case class Sequencer(patterns: SortedIntMap[Pattern])
+case class Sequencer(tracks: SortedIntMap[Track])
 
 object Sequencer {
   
@@ -42,13 +42,13 @@ object Sequencer {
     def addTrack[T <: Track: TrackMaker]
                 (patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
       
-      Try(seq.patterns(patIndex)).map { p =>
+      Try(seq.tracks(patIndex)).map { p =>
         val t   = TrackMaker.make(midiChannel)
         val key = if(p.tracks.isEmpty) 1 else p.tracks.keySet.max + 1
         // FIXME EEEEEK, use monocle
         val pt  = p.copy( tracks = p.tracks + (key -> t) )
-        val ps  = seq.patterns + (patIndex -> pt)
-        seq.copy(patterns = ps)
+        val ps  = seq.tracks + (patIndex -> pt)
+        seq.copy(tracks = ps)
       }
       .toEither.left.map(_.getMessage)
       

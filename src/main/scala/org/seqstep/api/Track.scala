@@ -10,7 +10,8 @@ import scala.collection.immutable.SortedMap
 sealed trait Track {
   
   val midiChannel: MIDIValue
-  val channels: SortedIntMap[Channel]
+  
+  val patterns: SortedIntMap[Pattern]
   
   // hardcoded until I implement measures (16 = 4x4).
   val stepLength : StepLength = refineMV[StepLengthRange](16)
@@ -19,12 +20,12 @@ sealed trait Track {
 
 final case class SynthTrack(
   midiChannel: MIDIValue,
-  channels: SortedIntMap[SynthChannel] = SortedIntMap()
+  voices: SortedIntMap[SynthVoice] = SortedIntMap()
 ) extends Track
 
 final case class DrumTrack(
   midiChannel: MIDIValue,
-  channels: SortedIntMap[DrumChannel] = Track.defaultDrumChannels
+  voices: SortedIntMap[DrumVoice] = Track.defaultDrumChannels
 ) extends Track
 
 object Track {
@@ -35,15 +36,15 @@ object Track {
     * Using the first eight semitones of the default octave is a common setup.
     *
     */
-  def defaultDrumChannels: SortedIntMap[DrumChannel] = {
+  def defaultDrumChannels: SortedIntMap[DrumVoice] = {
     val channels =
       Note.all
         .take(8)
         .zipWithIndex
         .map { case (n, i) =>
-          i -> DrumChannel(n, DefaultOctave, steps = SortedIntMap())
+          i -> DrumVoice(n, DefaultOctave, steps = SortedIntMap())
         }
-    SortedMap[Int, DrumChannel](channels :_*)
+    SortedMap[Int, DrumVoice](channels :_*)
   }
   
   

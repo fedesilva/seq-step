@@ -11,9 +11,9 @@ import monocle.macros.syntax.lens._
 
 val seq = Sequencer.initialized
 
-val (pidx, p)                 = seq.patterns.head
+val (pidx, p)                 = seq.tracks.head
 val (tidx, tr: DrumTrack)     = p.tracks.head
-val (cidx, ch: DrumChannel)   = tr.channels.head  //.collect{ case (idx, d: DrumChannel) => idx -> d}.head
+val (cidx, ch: DrumVoice)   = tr.voices.head  //.collect{ case (idx, d: DrumChannel) => idx -> d}.head
 
 // [(1),2,3,4] [(5),6,7,8] [(9),10,11,12] [(13),14,15,16]
 // 1,5,9,13
@@ -31,9 +31,9 @@ val nch = ch.copy(steps = newSteps)
 
 // Sequencer with steps.
 val sws = seq.copy(
-  patterns = seq.patterns + (0 -> p.copy(
+  patterns = seq.tracks + (0 -> p.copy(
     tracks = p.tracks + ( 0 -> tr.copy(
-      channels = tr.channels + (0 -> ch.copy(
+      channels = tr.voices + (0 -> ch.copy(
         steps = newSteps
       ))
     ))

@@ -6,57 +6,57 @@ package org.seqstep.api
   *
   * Created by f on 18/5/17.
   */
-sealed trait Channel {
+sealed trait Voice {
   val steps: SortedIntMap[Step]
 }
 
-final case class SynthChannel(
+final case class SynthVoice(
   steps: SortedIntMap[NoteStep]
-) extends Channel
+) extends Voice
 
-final case class DrumChannel(
+final case class DrumVoice(
   note:   Note,
   octave: Octave,
   steps:  SortedIntMap[DrumStep]
-) extends Channel
+) extends Voice
 
-final case class RenderedChannel(steps: SortedIntMap[Vector[RenderedStep]])
+final case class RenderedVoice(steps: SortedIntMap[Vector[RenderedStep]])
 
 
-/** Channel rendering type class allows rendering control steps before playback.
+/** Voice rendering type class allows rendering control steps before playback.
   *
   * Adds note off and does other relevant transformations like unifying contiguous full open notes.
   *
   */
-trait ChannelRenderer[T <: Channel] {
+trait VoiceRenderer[T <: Voice] {
   
   // For each step, generate a corresponding note off step.
   // The purpose of doing it once and not directly as needed is to have the computation done
   // on a single place and not later during playback.
   
-  def render(c: T): RenderedChannel
+  def render(c: T): RenderedVoice
   
 }
 
-object ChannelRenderer {
+object VoiceRenderer {
   
-  def render[T <: Channel : ChannelRenderer](c: T): RenderedChannel =
-    implicitly[ChannelRenderer[T]].render(c)
+  def render[T <: Voice : VoiceRenderer](c: T): RenderedVoice =
+    implicitly[VoiceRenderer[T]].render(c)
   
-  implicit val drumChannelRenderer = new ChannelRenderer[DrumChannel] {
-    override def render(c: DrumChannel): RenderedChannel = {
-      val ss = c.steps.map { case (idx, step) =>
+  implicit val drumVoiceRenderer = new VoiceRenderer[DrumVoice] {
+    override def render(c: DrumVoice): RenderedVoice = {
+      val steps = c.steps.map { case (idx, step) =>
         val on  = RenderedNoteStep(c.note, c.octave, step.velocity)
         val off = RenderedNoteOffStep(c.note,c.octave)
-        val es  = Vector(on , off)
-        (idx, es)
+        val onOffSteps  = Vector(on , off)
+        (idx, onOffSteps)
       }
-      RenderedChannel(ss)
+      RenderedVoice(steps)
     }
   }
   
-  implicit val synthChannelRenderer = new ChannelRenderer[SynthChannel] {
-    override def render(c: SynthChannel): RenderedChannel = {
+  implicit val synthVoiceRenderer = new VoiceRenderer[SynthVoice] {
+    override def render(c: SynthVoice): RenderedVoice = {
       val ss = c.steps.flatMap { case (idx, step) =>
         // new events, with their index
         val nix = idx + step.duration
@@ -67,7 +67,7 @@ object ChannelRenderer {
           .map{ case (k, v) => k -> v.map{ case (_, x) => x } }
           
       }
-      RenderedChannel(ss)
+      RenderedVoice(ss)
     }
   }
   

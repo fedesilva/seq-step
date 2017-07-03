@@ -13,7 +13,7 @@ val badResult: Validated[NonEmptyList[String], String] =
   ).map { (a: String, b: String, c: String) =>  a + b + c}
 
 
-val okResult: Validated[NonEmptyList[String], Seq[Char]] =
+val okResult: Validated[NonEmptyList[String], String] =
   (
     valid[NEL[String], String]("event 1 ok") |@|
     valid[NEL[String], String]("event 2 ok")

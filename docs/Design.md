@@ -4,13 +4,17 @@
 
     Sequencer
 
-      * Pattern
+        * Track (n)
     
-        * Track
+          * Pattern (n)
       
-          * Channel [SynthChannel|DrumChannel]
+            * Voice [SynthVoice|DrumVoice]
          
-            * Event [NoteEvent|DrumEvent]
+              * Step [NoteStep|DrumStep]
+        
+        * Snapshot
+        
+        * Song
 
 ## Sequencer
       
@@ -19,36 +23,46 @@
 
   Controls playback.
 
-  Given a Clock, i/o ports and a Sequencer it will emit midi messages using the sequencer steps each tick
-    of the clock.
+  Given a Clock, i/o ports and a Sequencer it will emit midi messages using the sequencer 
+    steps each tick of the clock.
     
-## Pattern
+## Track 
 
-  The pattern is a container for tracks.
+  The track is a container for patterns. Holds info about midi channel and which kind of steps they 
+  will contain; synths are different from drums.
   
-## Track and Channels and Steps.
+## Pattern, Voices and Steps.
 
-  Tracks aggregate Channels which in turn aggregate sequences of steps.
-   
-  Tracks declare a midi channel and a step length. 
+  A track can have several patterns, all of different metrics.
+    
+  A track can have more than one voice, allowing polyphony for synths and multiple instruments for 
+  drums. A drum track has a fixed note for each voice, a synth track has potentially a 
+  different note per step. 
   
-  All tracks in a channel are of the same length, but there is no such restriction for tracks in a pattern.
-      
-  All steps in a track no matter which channel are emitted at the same time; 
-    for a synth it means many notes are emitted providing polyphony where supported, 
-    for a drum, each channel is an instrument.
-  
-  Drum Channels declare a Note besides the steps.
+  Steps are note events. For drums only velocity is recorded since as mentioned above 
+  the note is fixed per voice.
     
-  Steps are also different depending on the type of step. Drum steps don't define a note or duration for example.
-    
-    
-###  TODO
+## Snapshots and Songs
 
-  * Make channels length be restricted by the tracks step length.
-     - for the time being, check on "play".
-     
-  
+A Snapshot is a group of links to specific patterns for one or more tracks. It is a snapshot of the 
+sequencer at a point in time; what was being played in each track.
+
+Snapshots can be used to create songs.
+
+A Song is a playlist of snapshots. Each snapshot is a part of the song; things like intro, chorus, etc.
+A song specifies which patterns in which order and for how long need to be performed to play the song.
+
 ## Clock, Time signature, etc.
 
    The pattern should be able to define time signatures. 
+
+## Live editing
+
+...
+    
+###  TODO
+
+  * Make Voices length be restricted by the tracks step length.
+     - for the time being, check on "play".
+     
+  
