@@ -18,7 +18,7 @@ implicit val strategy: Strategy   = Strategy.fromFixedDaemonPool(2)
 
 val zone = ZoneId.of("America/Montevideo")
 
-val tickInterrupter = time.sleep[Task](15.seconds).map( _  => true) ++ Stream(true)
+val tickInterrupter = time.sleep[Task](15.seconds).map( _  => true) //++ Stream(true)
 
 val tint = fs2.async.signalOf[Task, Boolean](false)
 val tints = tint.flatMap(s => s.modify( _ => true))
