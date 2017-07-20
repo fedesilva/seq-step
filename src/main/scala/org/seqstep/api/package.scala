@@ -4,6 +4,8 @@ import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.boolean.And
 import eu.timepit.refined.numeric._
+import monocle.Lens
+import monocle.function.At
 import shapeless.Nat._
 
 import scala.collection.immutable.{IntMap, SortedMap}
@@ -59,5 +61,12 @@ package object api {
   
   /** Helper to create a valid step length value */
   def stepLength(i: Int): Either[String, Refined[Int, StepLengthRange]] = refineV[StepLengthRange](i)
+  
+  
+  /** At instance for SortedMap */
+  implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] = new At[SortedMap[K, V], K, Option[V]]{
+    def at(i: K) = Lens{m: SortedMap[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
+  }
+  
   
 }
