@@ -23,7 +23,7 @@ import scala.collection.immutable.{IntMap, SortedMap}
   * Created by f on 19/5/17.
   *
   */
-package object api {
+package object api extends cats.syntax.OptionSyntax {
   
   /** A sorted map with int keys */
   type SortedIntMap[T] = SortedMap[Int, T]
