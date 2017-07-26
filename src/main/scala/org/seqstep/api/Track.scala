@@ -1,6 +1,7 @@
 package org.seqstep.api
 
 import eu.timepit.refined._
+import monocle.macros.Lenses
 
 import scala.collection.immutable.SortedMap
 
@@ -14,41 +15,23 @@ sealed trait Track {
   val patterns: SortedIntMap[Pattern]
   
   // hardcoded until I implement measures (16 = 4x4).
+  // FIXME should be a member of pattern
   val stepLength : StepLength = refineMV[StepLengthRange](16)
   
 }
 
+@Lenses
 final case class SynthTrack(
   midiChannel: MIDIValue,
-  voices: SortedIntMap[SynthVoice] = SortedIntMap()
+  patterns: SortedIntMap[SynthPattern] = SortedIntMap()
 ) extends Track
 
+@Lenses
 final case class DrumTrack(
   midiChannel: MIDIValue,
-  voices: SortedIntMap[DrumVoice] = Track.defaultDrumChannels
+  patterns: SortedIntMap[DrumPattern] = SortedIntMap()
 ) extends Track
 
-object Track {
-
-  /** Setup default drum channels.
-    *
-    * Channels in drum machines are instruments, and have fixed notes each.
-    * Using the first eight semitones of the default octave is a common setup.
-    *
-    */
-  def defaultDrumChannels: SortedIntMap[DrumVoice] = {
-    val channels =
-      Note.all
-        .take(8)
-        .zipWithIndex
-        .map { case (n, i) =>
-          i -> DrumVoice(n, DefaultOctave, steps = SortedIntMap())
-        }
-    SortedMap[Int, DrumVoice](channels :_*)
-  }
-  
-  
-}
 
 trait TrackMaker[T <: Track] {
   def make(midiChannel: MIDIValue): T

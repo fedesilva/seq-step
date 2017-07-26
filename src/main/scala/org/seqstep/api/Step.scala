@@ -1,5 +1,7 @@
 package org.seqstep.api
 
+import monocle.macros.Lenses
+
 /** Step  is a representation of a note event. There are different step types for drums and synths.
   *
   * Created by f on 19/5/17.
@@ -14,6 +16,7 @@ sealed trait Step
   * @param velocity play the note with this intensity
   *
   */
+@Lenses
 final case class NoteStep(
   note:     Note, 
   octave:   Octave,
@@ -27,6 +30,7 @@ final case class NoteStep(
   * @param velocity step velocity
   *
   */
+@Lenses
 final case class DrumStep(velocity: MIDIValue) extends Step
 
 /** Rendered Step represents a generic step ready for midi event generation; note on and note off.
@@ -34,14 +38,16 @@ final case class DrumStep(velocity: MIDIValue) extends Step
   * This is what will be played.
   *
   */
-trait RenderedStep
+sealed trait RenderedStep extends Step
 
+@Lenses
 final case class RenderedNoteStep(
   note:     Note,
   octave:   Octave,
   velocity: MIDIValue
 ) extends RenderedStep
 
+@Lenses
 final case class RenderedNoteOffStep(
   note: Note,
   octave: Octave

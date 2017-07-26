@@ -1,5 +1,9 @@
 package org.seqstep.api
 
+import monocle.macros.Lenses
+
+import scala.collection.immutable.SortedMap
+
 /** A sequence of Steps.
   *
   * FIXME make it so that the steps collections is refined to the `stepLength` of the track.
@@ -10,15 +14,18 @@ sealed trait Voice {
   val steps: SortedIntMap[Step]
 }
 
+@Lenses
 final case class SynthVoice(
   steps: SortedIntMap[NoteStep]
 ) extends Voice
 
+@Lenses
 final case class DrumVoice(
   note:   Note,
   octave: Octave,
   steps:  SortedIntMap[DrumStep]
 ) extends Voice
+
 
 final case class RenderedVoice(steps: SortedIntMap[Vector[RenderedStep]])
 
@@ -43,15 +50,21 @@ object VoiceRenderer {
   def render[T <: Voice : VoiceRenderer](c: T): RenderedVoice =
     implicitly[VoiceRenderer[T]].render(c)
   
-  implicit val drumVoiceRenderer = new VoiceRenderer[DrumVoice] {
-    override def render(c: DrumVoice): RenderedVoice = {
-      val steps = c.steps.map { case (idx, step) =>
+  implicit val drumVoiceRenderer = new VoiceRenderer[DrumPattern] {
+    override def render(c: DrumPattern): RenderedVoice = {
+      
+      for {
+        (iv, v) <- c.voices
+        (is, s) <- v.steps
+      }
+      
         val on  = RenderedNoteStep(c.note, c.octave, step.velocity)
         val off = RenderedNoteOffStep(c.note,c.octave)
         val onOffSteps  = Vector(on , off)
         (idx, onOffSteps)
-      }
+      
       RenderedVoice(steps)
+    
     }
   }
   

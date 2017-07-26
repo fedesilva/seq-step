@@ -1,6 +1,10 @@
 package org.seqstep.api
 
 
+import monocle.macros.Lenses
+import monocle.function.At.at
+
+
 import scala.util.Try
 
 /** Top level container of patterns.
@@ -8,23 +12,23 @@ import scala.util.Try
   * @param tracks patterns this sequencer holds.
   *
   */
+@Lenses
 case class Sequencer(tracks: SortedIntMap[Track])
 
 object Sequencer {
   
-  /** New empty sequencer with an empty pattern */
+  /** New empty sequencer */
   def apply(): Sequencer = {
-    val p   = Pattern(SortedIntMap())
-    val ps  = SortedIntMap() + (0 -> p)
+    val ps  = SortedIntMap()
     new Sequencer(ps)
   }
   
   /** New Sequencer using the passed patterns */
-  def apply(patterns: SortedIntMap[Pattern]): Sequencer = new Sequencer(patterns)
+  def apply(tracks: SortedIntMap[Track]): Sequencer = new Sequencer(tracks)
   
   /** A sequencer with default tracks */
   def initialized: Sequencer = {
-    
+
     val seq = Sequencer()
     (1 to 2).flatMap( i => midiint(i).toOption ).foldLeft(seq){ (s, v) =>
       if (v.value > 1) {
@@ -39,19 +43,17 @@ object Sequencer {
   /** Syntax methods for manipulating sequencer instances */
   implicit class Syntax(seq: Sequencer) {
    
+    
     def addTrack[T <: Track: TrackMaker]
-                (patIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
-      
-      Try(seq.tracks(patIndex)).map { p =>
-        val t   = TrackMaker.make(midiChannel)
-        val key = if(p.tracks.isEmpty) 1 else p.tracks.keySet.max + 1
-        // FIXME EEEEEK, use monocle
-        val pt  = p.copy( tracks = p.tracks + (key -> t) )
-        val ps  = seq.tracks + (patIndex -> pt)
-        seq.copy(tracks = ps)
+                (trIndex: Int, midiChannel: MIDIValue): Either[String, Sequencer] = {
+  
+      Try {
+        val t       = TrackMaker.make(midiChannel)
+        val trackL  = Sequencer.tracks ^|-> at(trIndex)
+        trackL.set(t.some)(seq)
       }
       .toEither.left.map(_.getMessage)
-      
+  
     }
     
   }
