@@ -1,19 +1,9 @@
-
-
 import org.seqstep.api._
 
 import scala.collection.immutable.SortedMap
 import eu.timepit.refined._
 
-import monocle.function.At._
-import monocle.std.map._      // to get Map instance for At
-import monocle.macros.syntax.lens._
-
 val seq = Sequencer.initialized
-
-val (pidx, p)                 = seq.tracks.head
-val (tidx, tr: DrumTrack)     = p.tracks.head
-val (cidx, ch: DrumVoice)   = tr.voices.head  //.collect{ case (idx, d: DrumChannel) => idx -> d}.head
 
 // [(1),2,3,4] [(5),6,7,8] [(9),10,11,12] [(13),14,15,16]
 // 1,5,9,13
@@ -27,15 +17,3 @@ val newSteps = SortedMap[Int, DrumStep](
   13  -> DrumStep(vel)
 )
 
-val nch = ch.copy(steps = newSteps)
-
-// Sequencer with steps.
-val sws = seq.copy(
-  patterns = seq.tracks + (0 -> p.copy(
-    tracks = p.tracks + ( 0 -> tr.copy(
-      channels = tr.voices + (0 -> ch.copy(
-        steps = newSteps
-      ))
-    ))
-  ))
-)
