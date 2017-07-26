@@ -8,9 +8,10 @@
     
           * Pattern (n)
       
-            * Voice [SynthVoice|DrumVoice]
-         
               * Step [NoteStep|DrumStep]
+              
+          * Voice [SynthVoice|DrumVoice]
+         
         
         * Snapshot
         
@@ -33,7 +34,7 @@
   
 ## Pattern, Voices and Steps.
 
-  A track can have several patterns, all of different metrics.
+  A track can have several patterns and each pattern can have different metrics.
     
   A track can have more than one voice, allowing polyphony for synths and multiple instruments for 
   drums. A drum track has a fixed note for each voice, a synth track has potentially a 
@@ -41,6 +42,7 @@
   
   Steps are note events. For drums only velocity is recorded since as mentioned above 
   the note is fixed per voice.
+  
     
 ## Snapshots and Songs
 

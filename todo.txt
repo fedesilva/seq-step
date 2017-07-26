@@ -1,7 +1,8 @@
 
 * Finish model.
-  - methods to add steps (syntax like builder for sequencer)
-    - work with monocle
+  - refactor drum track
+    - how?
+  - rewrite voice renderer
 
 * MIDI
   +  script
