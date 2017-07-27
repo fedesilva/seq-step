@@ -5,6 +5,7 @@ import monocle.macros.Lenses
 
 import scala.collection.immutable.SortedMap
 
+
 /**
   * Created by f on 19/5/17.
   */
@@ -42,11 +43,13 @@ object TrackMaker {
   def make[T <: Track](midiChannel: MIDIValue)(implicit b: TrackMaker[T]): T = b.make(midiChannel)
   
   implicit val synthTrackBuilder = new TrackMaker[SynthTrack] {
-    override def make(midiChannel: MIDIValue): SynthTrack = SynthTrack(refineMV[MIDIRange](1))
+    override def make(midiChannel: MIDIValue): SynthTrack =
+      SynthTrack(refineMV[MIDIRange](1))
   }
   
   implicit val drumTrackBuilder = new TrackMaker[DrumTrack] {
-    override def make(midiChannel: MIDIValue): DrumTrack = DrumTrack(refineMV[MIDIRange](1))
+    override def make(midiChannel: MIDIValue): DrumTrack =
+      DrumTrack(refineMV[MIDIRange](1))
   }
   
 }

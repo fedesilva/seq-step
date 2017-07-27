@@ -56,6 +56,15 @@ object Sequencer {
   
     }
     
+    def addStep[T <: Step]
+               (trIdx: Int, ptIdx: Int, stepIdx: Int, step: T ): Either[String, Sequencer] = {
+      
+      
+      
+      ???
+      
+    }
+    
   }
   
 }

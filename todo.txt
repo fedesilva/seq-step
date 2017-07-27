@@ -1,8 +1,9 @@
 
 * Finish model.
-  - refactor drum track
-    - how?
-  - rewrite voice renderer
+    - Patterns have steps
+    - SynthSteps have voices
+    - DrumsSteps have instruments.
+    - Steps must be created by a Pattern
 
 * MIDI
   +  script

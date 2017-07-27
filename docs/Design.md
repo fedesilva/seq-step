@@ -10,7 +10,7 @@
       
               * Step [NoteStep|DrumStep]
               
-          * Voice [SynthVoice|DrumVoice]
+                * Voice [SynthVoice|DrumVoice]
          
         
         * Snapshot

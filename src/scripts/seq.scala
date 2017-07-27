@@ -17,3 +17,6 @@ val newSteps = SortedMap[Int, DrumStep](
   13  -> DrumStep(vel)
 )
 
+// seq.addStep(trackIndex, patternIndex, stepIndex, step)
+// seq.addSteps(trackIndex, patternIndex, steps: Map[Int, Vector[Step])
+
