@@ -13,7 +13,7 @@ sealed trait Track {
   
   val midiChannel: MIDIValue
   
-  val patterns: SortedIntMap[Pattern]
+  val steps: SortedIntMap[Step]
   
   // hardcoded until I implement measures (16 = 4x4).
   // FIXME should be a member of pattern
@@ -24,13 +24,15 @@ sealed trait Track {
 @Lenses
 final case class SynthTrack(
   midiChannel: MIDIValue,
-  patterns: SortedIntMap[SynthPattern] = SortedIntMap()
+  steps: SortedIntMap[SynthStep] = SortedIntMap()
 ) extends Track
 
 @Lenses
 final case class DrumTrack(
+  note: Note,
+  octave: Octave,
   midiChannel: MIDIValue,
-  patterns: SortedIntMap[DrumPattern] = SortedIntMap()
+  steps: SortedIntMap[DrumStep] = SortedIntMap()
 ) extends Track
 
 
@@ -49,7 +51,7 @@ object TrackMaker {
   
   implicit val drumTrackBuilder = new TrackMaker[DrumTrack] {
     override def make(midiChannel: MIDIValue): DrumTrack =
-      DrumTrack(refineMV[MIDIRange](1))
+      DrumTrack(Note.C, DefaultOctave, refineMV[MIDIRange](1))
   }
   
 }

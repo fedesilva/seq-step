@@ -9,11 +9,11 @@ import scala.util.Try
 
 /** Top level container of patterns.
   *
-  * @param tracks patterns this sequencer holds.
+  * @param patterns patterns this sequencer holds.
   *
   */
 @Lenses
-case class Sequencer(tracks: SortedIntMap[Track])
+case class Sequencer(patterns: SortedIntMap[Pattern])
 
 object Sequencer {
   
@@ -24,7 +24,7 @@ object Sequencer {
   }
   
   /** New Sequencer using the passed patterns */
-  def apply(tracks: SortedIntMap[Track]): Sequencer = new Sequencer(tracks)
+  def apply(patterns: SortedIntMap[Pattern]): Sequencer = new Sequencer(patterns)
   
   /** A sequencer with default tracks */
   def initialized: Sequencer = {
@@ -49,11 +49,11 @@ object Sequencer {
   
       Try {
         val t       = TrackMaker.make(midiChannel)
-        val trackL  = Sequencer.tracks ^|-> at(trIndex)
-        trackL.set(t.some)(seq)
+//        val trackL  = Sequencer.tracks ^|-> at(trIndex)
+//        trackL.set(t.some)(seq)
       }
       .toEither.left.map(_.getMessage)
-  
+      ???
     }
     
     def addStep[T <: Step]
