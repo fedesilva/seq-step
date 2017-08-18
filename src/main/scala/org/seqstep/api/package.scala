@@ -63,7 +63,7 @@ package object api extends cats.syntax.OptionSyntax {
   def stepLength(i: Int): Either[String, Refined[Int, StepLengthRange]] = refineV[StepLengthRange](i)
   
   
-  /** At instance for SortedMap */
+  /** `At` instance for SortedMap */
   implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] = new At[SortedMap[K, V], K, Option[V]]{
     def at(i: K) = Lens{m: SortedMap[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   }

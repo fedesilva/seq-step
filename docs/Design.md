@@ -4,15 +4,16 @@
 
     Sequencer
 
-        * Pattern (n)
 
-          * Track (n)
+        * Track (n)
+
+          * Pattern (n)
       
-              * Step [NoteStep|DrumStep]
+              * Step [NoteStep|DrumStep] (n)
               
-                * Voice
-         
         
         * Snapshot
+          - points to a sequence of patterns
+          - settings like muting
         
         * Song
