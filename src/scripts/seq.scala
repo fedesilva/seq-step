@@ -10,12 +10,12 @@ val seq = Sequencer.initialized
 
 val vel = refineMV[MIDIRange](32)
 
-val newSteps = SortedMap[Int, DrumStep](
-  1   -> DrumStep(vel),
-  5   -> DrumStep(vel),
-  9   -> DrumStep(vel),
-  13  -> DrumStep(vel)
-)
+//val newSteps = SortedMap[Int, DrumStep](
+//  1   -> DrumStep(vel),
+//  5   -> DrumStep(vel),
+//  9   -> DrumStep(vel),
+//  13  -> DrumStep(vel)
+//)
 
 // seq.addStep(trackIndex, patternIndex, stepIndex, step)
 // seq.addSteps(trackIndex, patternIndex, steps: Map[Int, Vector[Step])

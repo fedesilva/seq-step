@@ -17,3 +17,10 @@
           - settings like muting
         
         * Song
+
+
+# Syntax 
+
+  - Partial operation
+    - for keeping context (where did you get this step from?)
+      and later using it as a 

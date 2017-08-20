@@ -4,7 +4,13 @@
 * Finish model.
   - rewrite model
     - old approach Seq -> Track -> Pattern
+    - initialize
+    - addTrack
+    - addPattern
+
   - think about voices
+    - defined as path dependent types.
+  
 
 * MIDI
   +  script

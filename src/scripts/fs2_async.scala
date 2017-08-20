@@ -20,11 +20,6 @@ val zone = ZoneId.of("America/Montevideo")
 
 val tickInterrupter = time.sleep[Task](15.seconds).map( _  => true) //++ Stream(true)
 
-val tint = fs2.async.signalOf[Task, Boolean](false)
-val tints = tint.flatMap(s => s.modify( _ => true))
-
-
-
 
 val ticks = time.awakeEvery[Task](250.millis).map{ duration =>
   val now = LocalDateTime.now(ZoneId.of("America/Montevideo"))

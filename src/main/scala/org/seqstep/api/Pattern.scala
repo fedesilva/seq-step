@@ -2,20 +2,18 @@ package org.seqstep.api
 
 import monocle.macros.Lenses
 
-
-
 sealed trait Pattern {
-  val tracks: SortedIntMap[Track]
+  val steps: SortedIntMap[Step]
 }
 
 @Lenses
 final case class SynthPattern(
-  tracks: SortedIntMap[SynthTrack]
+  steps: SortedIntMap[SynthStep]
 ) extends Pattern
 
 @Lenses
 final case class DrumPattern(
-  tracks: SortedIntMap[Track]
+  steps: SortedIntMap[DrumStep]
 ) extends Pattern
 
 
