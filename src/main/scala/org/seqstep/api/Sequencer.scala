@@ -19,8 +19,6 @@ case class Sequencer(tracks: SortedIntMap[Track])
 
 object Sequencer {
   
-  
-  
   /** New empty sequencer */
   def apply(): Sequencer = {
     val ps  = SortedIntMap()

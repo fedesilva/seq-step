@@ -47,11 +47,13 @@ object TrackMaker {
   def make[T <: Track](midiChannel: MIDIValue)(implicit b: TrackMaker[T]): T = b.make(midiChannel)
   
   implicit val synthTrackBuilder = new TrackMaker[SynthTrack] {
-    override def make(midiChannel: MIDIValue): SynthTrack = SynthTrack(midiChannel)
+    override def make(midiChannel: MIDIValue): SynthTrack =
+      SynthTrack(midiChannel)
   }
   
   implicit val drumTrackBuilder = new TrackMaker[DrumTrack] {
-    override def make(midiChannel: MIDIValue): DrumTrack = DrumTrack(Note.C, DefaultOctave, midiChannel)
+    override def make(midiChannel: MIDIValue): DrumTrack =
+      DrumTrack(Note.C, DefaultOctave, midiChannel)
   }
   
 }
