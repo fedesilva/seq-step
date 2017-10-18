@@ -9,9 +9,9 @@ import Validated.{ valid, invalid }
 import cats.data.{ NonEmptyList => NEL }
 
 
-/** Top level container of patterns.
+/** Top level container of tracks.
   *
-  * @param tracks patterns this sequencer holds.
+  * @param tracks the tracks this sequencer holds.
   *
   */
 @Lenses
@@ -21,12 +21,13 @@ object Sequencer {
   
   /** New empty sequencer */
   def apply(): Sequencer = {
-    val ps  = SortedIntMap()
+    val ps = SortedIntMap()
     new Sequencer(ps)
   }
   
   /** New Sequencer using the passed patterns */
-  def apply(tracks: SortedIntMap[Track]): Sequencer = new Sequencer(tracks)
+  def apply(tracks: SortedIntMap[Track]): Sequencer =
+    new Sequencer(tracks)
   
   /** A sequencer with default tracks */
   def initialized: Validated[NEL[Error], Sequencer] = {
@@ -37,17 +38,14 @@ object Sequencer {
     
     (1 to 2)
       .flatMap( i => midiint(i).toOption )
-      .foldLeft( valid[NEL[Error], Sequencer](seq)) { (vs, v) =>
+      .foldLeft( valid[NEL[Error], Sequencer](seq) ) { (vs, v) =>
         if (v.value == 1) {
-          vs.andThen(seq => seq.addTrack[SynthTrack](v.value, v))
-        }
-        else {
-          vs.andThen(s => s.addTrack[DrumTrack](v.value, v))
+          vs.andThen(_.addTrack[SynthTrack](v.value, v))
+        } else {
+          vs.andThen(_.addTrack[DrumTrack](v.value, v))
         }
       }
     
   }
   
 }
-
-

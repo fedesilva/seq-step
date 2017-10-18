@@ -18,13 +18,14 @@ object SequencerSyntax {
       
       Try {
         val t       = TrackMaker.make(midiChannel)
-        val trackL  = Sequencer.tracks ^|-> at(trIndex)
+        val trackL  = Sequencer.tracks composeLens at(trIndex)
         trackL.set(t.some)(seq)
       }
       .fold(
         t   => invalid(NEL.of(GenericError(t.getMessage))),
         seq => valid(seq)
       )
+      
     }
     
     def addStep[T <: Step]

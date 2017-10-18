@@ -3,9 +3,6 @@ package org.seqstep.api
 import eu.timepit.refined._
 import monocle.macros.Lenses
 
-import scala.collection.immutable.SortedMap
-
-
 /**
   * Created by f on 19/5/17.
   */
@@ -44,7 +41,9 @@ trait TrackMaker[T <: Track] {
 
 object TrackMaker {
   
-  def make[T <: Track](midiChannel: MIDIValue)(implicit b: TrackMaker[T]): T = b.make(midiChannel)
+  def make[T <: Track]
+          (midiChannel: MIDIValue)(implicit b: TrackMaker[T]): T =
+            b.make(midiChannel)
   
   implicit val synthTrackBuilder = new TrackMaker[SynthTrack] {
     override def make(midiChannel: MIDIValue): SynthTrack =
