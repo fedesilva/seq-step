@@ -1,0 +1,22 @@
+May 10, 2019 9:27:55 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+May 10, 2019 9:27:55 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+May 10, 2019 9:27:56 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+The server is listening for incoming connections at local:///var/folders/jp/9xjl42c548bc0tj4ymf5_wbh0000gn/T/bsp3769661690592582401/-ne4lrmvsg9ph.socket...
+Accepted incoming BSP client connection at local:///var/folders/jp/9xjl42c548bc0tj4ymf5_wbh0000gn/T/bsp3769661690592582401/-ne4lrmvsg9ph.socket
+request received: build/initialize
+BSP initialization handshake complete.
+shutdown request received: build/shutdown
+Client in /Users/f/Workshop/mine/seq-music/seq-step/.bloop triggered cancellation. Cancelling tasks...
+The task for 'bsp --protocol local --socket /var/folders/jp/9xjl42c548bc0tj4ymf5_wbh0000gn/T/bsp3769661690592582401/-ne4lrmvsg9ph.socket' finished.
+Project root-test has no analysis and setup.
+Writing /Users/f/Workshop/mine/seq-music/seq-step/.bloop/root/root-analysis.bin.
+/Users/f/Workshop/mine/seq-music/seq-step/src/scripts/midi.scala
+WARN  no build target: /Users/f/Workshop/mine/seq-music/seq-step/src/scripts/midi.scala
+WARN  code navigation does not work for the file '/Users/f/Workshop/mine/seq-music/seq-step/src/scripts/midi.scala' because it doesn't belong to a build target.
+WARN  no build target: /Users/f/Workshop/mine/seq-music/seq-step/src/scripts/midi.scala
+WARN  no build target: /Users/f/Workshop/mine/seq-music/seq-step/src/scripts/refined.scala
+INFO  shutting down Metals
+INFO  bloop exit: 0

@@ -6,7 +6,7 @@ sealed trait Step
 
 @Lenses
 final case class SynthStep(
-  note:   Note,
+  note: Note,
   octave: Octave,
   duration: Int,
   velocity: MIDIValue
