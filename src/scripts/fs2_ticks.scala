@@ -1,40 +1,36 @@
 
 import java.time.{LocalDateTime, ZoneId}
 
-import fs2._
+import cats.effect._
+import fs2.Stream
+import scala.concurrent.ExecutionContext.Implicits.global
 
-import scala.collection.mutable
+
+
 import scala.concurrent.duration._
+
+implicit val timer: Timer[IO] = IO.timer(global)
+implicit val cs: ContextShift[IO] = IO.contextShift(global)
 
 // To Do List
 // - Create interval stream
 // - Create steps stream
 // - merge them
 
-
-implicit val scheduler: Scheduler = Scheduler.fromFixedDaemonPool(2)
-
-implicit val strategy: Strategy   = Strategy.fromFixedDaemonPool(2)
-
 val zone = ZoneId.of("America/Montevideo")
 
-val tickInterrupter = time.sleep[Task](15.seconds).map( _  => true) //++ Stream(true)
-
-
-val ticks = time.awakeEvery[Task](250.millis).map{ duration =>
-  val now = LocalDateTime.now(ZoneId.of("America/Montevideo"))
-  println(s"${duration.toMillis} at $now")
-  duration.toMillis -> now
-}.interruptWhen(tickInterrupter)
+val ticks = Stream.awakeEvery[IO](250.millis).interruptAfter(5.seconds)
 
 val notes = Stream.emits(List(1,2,3)).repeat
 
 val zipped = ticks.zip(notes).map{
-  case ((a,b),c) => 
-  println(c)
-  (a,b,c)
+  case (fd,c) =>
+  println(s"duration ${fd.toMillis} notes $c")
+  (fd,c)
 }
 
 
-val runEff = zipped.runLog
+def run(): Unit = {
+  zipped.compile.drain.unsafeRunSync()
+}
 

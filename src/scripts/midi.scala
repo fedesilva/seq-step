@@ -1,4 +1,6 @@
 
+import com.sun.media.sound.MidiOutDeviceProvider
+
 import javax.sound.midi._
 
 
@@ -17,20 +19,27 @@ def send(rcv: Receiver, chan: Int)( note: Int, vel: Int, len: Int = 1000): Unit 
 }
 
 val devices = MidiSystem.getMidiDeviceInfo
-val bus1    = MidiSystem.getMidiDevice(devices(3))
+val out1    = MidiSystem.getMidiDevice(devices(3))
+
+def introspection(): Unit =
+  devices.foreach {
+    dev =>
+      println(dev.getClass)
+      println(s"${dev.getVendor}::${dev.getName} : ${dev.getDescription}")
+  }
 
 println("opening")
-bus1.open()
+out1.open()
 
-val rcvr = bus1.getReceiver
+val rcvr = out1.getReceiver
 
 val sender = send(rcvr, 0) _
 
-def play(times: Int = 5) = {
+def play(times: Int = 5): Unit = {
   val ns = 
     (0 to times).zip(
-      Stream.continually(
-        List(0,5,3,7).toStream
+      LazyList.continually(
+        List(0,5,3,7).to(LazyList)
       ).flatten
     )
   ns.foreach{

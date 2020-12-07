@@ -1,9 +1,7 @@
 package org.seqstep.api
 
-import cats._, cats.data._, cats.implicits._
-import Validated.{valid, invalid}
-import cats.data.{NonEmptyList => NEL}
-
+import cats.data.Validated.{invalid, valid}
+import cats.data.{NonEmptyList => NEL, _}
 import monocle.function.At._
 
 import scala.util.Try

@@ -21,8 +21,8 @@ object Sequencer {
   
   /** New empty sequencer */
   def apply(): Sequencer = {
-    val ps = SortedIntMap()
-    new Sequencer(ps)
+    val tracks = SortedIntMap()
+    new Sequencer(tracks)
   }
   
   /** New Sequencer using the passed patterns */
@@ -40,9 +40,9 @@ object Sequencer {
       .flatMap( i => midiint(i).toOption )
       .foldLeft( valid[NEL[Error], Sequencer](seq) ) { (vs, v) =>
         if (v.value == 1) {
-          vs.andThen(_.addTrack[SynthTrack](v.value, v))
-        } else {
           vs.andThen(_.addTrack[DrumTrack](v.value, v))
+        } else {
+          vs.andThen(_.addTrack[SynthTrack](v.value, v))
         }
       }
     
