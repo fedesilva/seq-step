@@ -2,31 +2,37 @@
 
 # Structures and types overview
 
-    Sequencer
+### Sequencer
 
-        * Track (n)
+* Track (n)
 
-          * Pattern (n)
-      
-              * Step [NoteStep|DrumStep] (n)
-              
-        
-        * Scene
-          - points to a sequence of patterns
-          - settings like muting of tracks
-        
-        * Song
+  * track attributes:
+    * channel
+    * default velocity
+
+      * Pattern (n)
+  
+          * Step [NoteStep|DrumStep] (n)
+          
+    
+* Scene
+  - points to a sequence of patterns
+  - settings like muting of tracks
+
+* Song
 
 
-    Transport
+### Transport
 
-        - midi clock 
-                - Clock events are sent at a rate of 24 pulses per quarter note
-            - construct clock with bpm
-                - or emit time events and keep track of beats at the Transport level 
+- midi clock 
+    - Clock events are sent at a rate of 24 pulses per quarter note
+    - construct transport with bpm
+        - emit low level time events and emit proper midi clock pulses depending on bpm settings  
 
-        - Emit time events 
-        - translate sequences to time events (note on, note off)
+- Emit clock events, note events
+    - interpret the sequences (particularly, when the notes end, since note on is evident)
+    
+
             
 
 #  

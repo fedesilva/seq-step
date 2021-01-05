@@ -1,12 +1,9 @@
 
-import java.time.{LocalDateTime, ZoneId}
-
+import java.time.ZoneId
 import cats.effect._
-import fs2.Stream
+import fs2.{Pure, Stream}
+
 import scala.concurrent.ExecutionContext.Implicits.global
-
-
-
 import scala.concurrent.duration._
 
 implicit val timer: Timer[IO] = IO.timer(global)
@@ -17,20 +14,28 @@ implicit val cs: ContextShift[IO] = IO.contextShift(global)
 // - Create steps stream
 // - merge them
 
-val zone = ZoneId.of("America/Montevideo")
+val zone: ZoneId =
+  ZoneId.of("America/Montevideo")
 
-val ticks = Stream.awakeEvery[IO](250.millis).interruptAfter(5.seconds)
+val ticks: Stream[IO, FiniteDuration] =
+  Stream
+    .awakeEvery[IO](250.millis)
+    .interruptAfter(5.seconds)
 
-val notes = Stream.emits(List(1,2,3)).repeat
+val notes: Stream[Pure, Int] =
+  Stream
+    .emits(List(1, 2, 3))
+    .repeat
 
-val zipped = ticks.zip(notes).map{
-  case (fd,c) =>
-  println(s"duration ${fd.toMillis} notes $c")
-  (fd,c)
-}
+val zipped: Stream[IO, (FiniteDuration, Int)] =
+  ticks.zip(notes).map {
+    case (fd, c) =>
+      println(s"duration ${fd.toMillis} notes $c")
+      (fd, c)
+  }
 
-
-def run(): Unit = {
-  zipped.compile.drain.unsafeRunSync()
-}
-
+def run(): Unit =
+  zipped
+    .compile
+    .drain
+    .unsafeRunSync()

@@ -66,7 +66,7 @@ package object api extends cats.syntax.OptionSyntax {
   /** Helper to create a valid step length value */
   def stepLength(i: Int): Either[String, StepLength] = refineV[StepLengthRange](i)
 
-  trait Error {
+  trait Error {2
     val description: String
   }
 
