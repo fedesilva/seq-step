@@ -6,8 +6,8 @@ sealed trait Step
 
 @Lenses
 final case class SynthStep(
-  note: Note,
-  octave: Octave,
+  note:     Note,
+  octave:   Octave,
   duration: Int,
   velocity: MIDIValue
 ) extends Step
@@ -15,5 +15,5 @@ final case class SynthStep(
 @Lenses
 final case class DrumStep(
   instrument: Int,
-  velocity: MIDIValue
+  velocity:   MIDIValue
 ) extends Step

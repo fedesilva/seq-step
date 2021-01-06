@@ -25,7 +25,6 @@ import scala.collection.immutable.{IntMap, SortedMap}
   * to flood the client code with `refined` imports.
   *
   * Created by f on 19/5/17.
-  *
   */
 package object api extends cats.syntax.OptionSyntax {
 
@@ -37,7 +36,7 @@ package object api extends cats.syntax.OptionSyntax {
     def apply[T](): SortedIntMap[T] = SortedMap[Int, T]()
   }
 
-  /** Allowed values range for midi values: 0 to 127  */
+  /** Allowed values range for midi values: 0 to 127 */
   type MIDIRange = GreaterEqual[_0] And LessEqual[W.`127`.T]
 
   /** Midi Value Int with correct range */
@@ -66,7 +65,7 @@ package object api extends cats.syntax.OptionSyntax {
   /** Helper to create a valid step length value */
   def stepLength(i: Int): Either[String, StepLength] = refineV[StepLengthRange](i)
 
-  trait Error {2
+  trait Error {
     val description: String
   }
 

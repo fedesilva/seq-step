@@ -3,8 +3,7 @@ package org.seqstep.api
 import eu.timepit.refined._
 import monocle.macros.Lenses
 
-/**
-  * Created by f on 19/5/17.
+/** Created by f on 19/5/17.
   */
 sealed trait Track {
 
@@ -23,15 +22,15 @@ sealed trait Track {
 @Lenses
 final case class SynthTrack(
   midiChannel: MIDIValue,
-  patterns: SortedIntMap[SynthPattern] = SortedIntMap()
+  patterns:    SortedIntMap[SynthPattern] = SortedIntMap()
 ) extends Track
 
 @Lenses
 final case class DrumTrack(
-  note: Note,
-  octave: Octave,
+  note:        Note,
+  octave:      Octave,
   midiChannel: MIDIValue,
-  patterns: SortedIntMap[DrumPattern] = SortedIntMap()
+  patterns:    SortedIntMap[DrumPattern] = SortedIntMap()
 ) extends Track
 
 trait TrackMaker[T <: Track] {

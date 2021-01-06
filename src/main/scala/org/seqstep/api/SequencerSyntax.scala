@@ -12,7 +12,7 @@ object SequencerSyntax {
   implicit class Syntax(seq: Sequencer) {
 
     def addTrack[T <: Track: TrackMaker](
-      trIndex: Int,
+      trIndex:     Int,
       midiChannel: MIDIValue
     ): Validated[NEL[Error], Sequencer] = {
 
@@ -28,10 +28,10 @@ object SequencerSyntax {
     }
 
     def addStep[T <: Step](
-      trIdx: Int,
-      ptIdx: Int,
+      trIdx:   Int,
+      ptIdx:   Int,
       stepIdx: Int,
-      step: T
+      step:    T
     ): Validated[Error, Sequencer] = {
       ???
     }

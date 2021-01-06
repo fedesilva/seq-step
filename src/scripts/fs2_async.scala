@@ -14,7 +14,6 @@ import scala.concurrent.duration._
 //
 
 implicit val scheduler: Scheduler = Scheduler.fromFixedDaemonPool(2)
-
 implicit val strategy: Strategy   = Strategy.fromFixedDaemonPool(2)
 
 val zone = ZoneId.of("America/Montevideo")

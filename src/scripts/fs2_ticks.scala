@@ -24,7 +24,9 @@ val ticks: Stream[IO, FiniteDuration] =
 
 val notes: Stream[Pure, Int] =
   Stream
-    .emits(List(1, 2, 3))
+    .emits(
+      List(1, 2, 3)
+    )
     .repeat
 
 val zipped: Stream[IO, (FiniteDuration, Int)] =

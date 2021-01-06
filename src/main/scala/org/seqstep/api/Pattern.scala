@@ -15,5 +15,3 @@ final case class SynthPattern(
 final case class DrumPattern(
   steps: SortedIntMap[DrumStep]
 ) extends Pattern
-
-
