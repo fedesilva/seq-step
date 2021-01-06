@@ -2,25 +2,38 @@
 
 # Structures and types overview
 
+#### To Do
+
+* Review model
+* Commit and merge
+* Simple Transport
+
+
+## Design
+
 ### Sequencer
+
+  
 
 * Track (n)
 
   * track attributes:
-    * channel
+    * midi channel
     * default velocity
 
       * Pattern (n)
   
           * Step [NoteStep|DrumStep] (n)
           
+  * Tracks are 
     
 * Scene
   - points to a sequence of patterns
   - settings like muting of tracks
 
 * Song
-
+  * Collection of scenes
+  * Can be repeated
 
 ### Transport
 
