@@ -1,12 +1,13 @@
 package org.seqstep
 
-import eu.timepit.refined._
-import eu.timepit.refined.api.Refined
-import eu.timepit.refined.boolean.And
-import eu.timepit.refined.numeric._
+
 import monocle.Lens
 import monocle.function.At
-import shapeless.Nat._
+import shapeless.Nat.*
+import eu.timepit.refined.*
+import eu.timepit.refined.api.Refined
+import eu.timepit.refined.auto.*
+import eu.timepit.refined.predicates.all.*
 
 import scala.collection.immutable.{IntMap, SortedMap}
 
@@ -34,7 +35,7 @@ package object api {
   }
   
   /** Allowed values range for midi values: 0 to 127  */
-  type MIDIRange = And[GreaterEqual[_0], LessEqual[W.`127`.T]]
+  type MIDIRange = And[GreaterEqual[_0], LessEqual[127]]
   
   /** Midi Value Int with correct range */
   type MIDIValue = Int Refined MIDIRange
@@ -43,18 +44,18 @@ package object api {
   def midiint(i: Int): Either[String, MIDIValue] = refineV[MIDIRange](i)
   
   /** Allowed values range for midi octaves */
-  type OctaveRange = And[GreaterEqual[_0], LessEqual[_10]]
+  type OctaveRange = And[GreaterEqual[0], LessEqual[10]]
   
   /** An octave value is an int within the midi octave range: 0 to 10 */
   type Octave = Int Refined OctaveRange
   
   /** Helper to create a valid octave value */
-  def octave(i:Int): Either[String, Refined[Int, OctaveRange]] = refineV[OctaveRange](i)
+  def octave(i:Int): Either[String, Octave] = refineV[OctaveRange](i)
   
-  val DefaultOctave: Refined[Int, OctaveRange] = refineMV[OctaveRange](1)
+  val DefaultOctave : Octave = 1
   
   /** Allowed step length values range for tracks step length */
-  type StepLengthRange = And[GreaterEqual[_1], LessEqual[W.`256`.T]]
+  type StepLengthRange = And[GreaterEqual[1], LessEqual[256]]
   
   /** Step length value within defined range: 1 to 256 */
   type StepLength = Int Refined StepLengthRange
@@ -64,9 +65,10 @@ package object api {
   
   
   /** At instance for SortedMap */
-  implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] = new At[SortedMap[K, V], K, Option[V]]{
-    def at(i: K) = Lens{m: SortedMap[K, V] => m.get(i)}(optV => map => optV.fold(map - i)(v => map + (i -> v)))
-  }
+  implicit def atSortedMap[K, V]: At[SortedMap[K, V], K, Option[V]] =
+    (i: K) => Lens[SortedMap[K, V], Option[V]] {
+      m => m.get(i)
+    }(optV => map => optV.fold(map - i)(v => map + (i -> v)))
   
   
 }

@@ -9,6 +9,7 @@
         * Track
       
           * Channel [SynthChannel|DrumChannel]
+
          
             * Event [NoteEvent|DrumEvent]
 
@@ -32,7 +33,7 @@
    
   Tracks declare a midi channel and a step length. 
   
-  All tracks in a channel are of the same length, but there is no such restriction for tracks in a pattern.
+  All channels in a track  are of the same length, but there is no such restriction for tracks in a pattern.
       
   All steps in a track no matter which channel are emitted at the same time; 
     for a synth it means many notes are emitted providing polyphony where supported, 
