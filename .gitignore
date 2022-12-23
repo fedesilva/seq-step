@@ -3,3 +3,4 @@ build/target/
 .bsp
 .bloop
 .metals
+project/.bloop
