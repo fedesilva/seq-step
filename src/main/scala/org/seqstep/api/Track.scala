@@ -3,19 +3,19 @@ package org.seqstep.api
 import eu.timepit.refined._
 
 import scala.collection.immutable.SortedMap
+import lucuma.refined._
 
 /**
   * Created by f on 19/5/17.
   */
-sealed trait Track {
+sealed trait Track:
   
   val midiChannel: MIDIValue
   val channels: SortedIntMap[Channel]
   
   // hardcoded until I implement measures (16 = 4x4).
-  val stepLength : StepLength = refineMV[StepLengthRange](16)
+  val stepLength : StepLength = 16.refined[StepLengthRange]
   
-}
 
 final case class SynthTrack(
   midiChannel: MIDIValue,
@@ -27,7 +27,7 @@ final case class DrumTrack(
   channels: SortedIntMap[DrumChannel] = Track.defaultDrumChannels
 ) extends Track
 
-object Track {
+object Track:
 
   /** Setup default drum channels.
     *
@@ -35,7 +35,7 @@ object Track {
     * Using the first eight semitones of the default octave is a common setup.
     *
     */
-  def defaultDrumChannels: SortedIntMap[DrumChannel] = {
+  def defaultDrumChannels: SortedIntMap[DrumChannel] =
     val channels =
       Note.all
         .take(8)
@@ -44,27 +44,21 @@ object Track {
           i -> DrumChannel(n, DefaultOctave, steps = SortedIntMap())
         }
     SortedMap[Int, DrumChannel](channels :_*)
-  }
   
   
-}
 
-trait TrackMaker[T <: Track] {
+trait TrackMaker[T <: Track]:
   def make(midiChannel: MIDIValue): T
-}
 
-object TrackMaker {
+object TrackMaker:
   
   def make[T <: Track](midiChannel: MIDIValue)(implicit b: TrackMaker[T]): T = b.make(midiChannel)
   
-  implicit val synthTrackBuilder = new TrackMaker[SynthTrack] {
-    override def make(midiChannel: MIDIValue): SynthTrack = SynthTrack(refineMV[MIDIRange](1))
-  }
+  implicit val synthTrackBuilder: TrackMaker[SynthTrack] = new TrackMaker[SynthTrack]:
+    override def make(midiChannel: MIDIValue): SynthTrack = SynthTrack(1.refined[MIDIRange])
   
-  implicit val drumTrackBuilder = new TrackMaker[DrumTrack] {
-    override def make(midiChannel: MIDIValue): DrumTrack = DrumTrack(refineMV[MIDIRange](1))
-  }
+  implicit val drumTrackBuilder: TrackMaker[DrumTrack] = new TrackMaker[DrumTrack]:
+    override def make(midiChannel: MIDIValue): DrumTrack = DrumTrack(1.refined[MIDIRange])
   
-}
 
 
