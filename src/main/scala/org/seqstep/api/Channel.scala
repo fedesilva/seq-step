@@ -19,7 +19,9 @@ final case class DrumChannel(
   steps:  SortedIntMap[DrumStep]
 ) extends Channel
 
-final case class RenderedChannel(steps: SortedIntMap[Vector[RenderedStep]])
+final case class RenderedChannel(
+  steps: SortedIntMap[Vector[RenderedStep]]
+)
 
 /** Channel rendering type class allows rendering control steps before playback.
   *
@@ -33,35 +35,35 @@ trait ChannelRenderer[T <: Channel]:
 
   def render(c: T): RenderedChannel
 
-
 object ChannelRenderer:
 
   def render[T <: Channel: ChannelRenderer](c: T): RenderedChannel =
     implicitly[ChannelRenderer[T]].render(c)
 
-  implicit val drumChannelRenderer: ChannelRenderer[DrumChannel] =
-    new ChannelRenderer[DrumChannel]:
-      override def render(c: DrumChannel): RenderedChannel =
-        val ss = c.steps.map { case (idx, step) =>
-          val on  = RenderedNoteStep(c.note, c.octave, step.velocity)
-          val off = RenderedNoteOffStep(c.note, c.octave)
-          val es  = Vector(on, off)
-          (idx, es)
-        }
-        RenderedChannel(ss)
+  given ChannelRenderer[DrumChannel] with
+    override def render(c: DrumChannel): RenderedChannel =
+      val ss = c.steps.map { case (idx, step) =>
+        val on  = RenderedNoteStep(c.note, c.octave, step.velocity)
+        val off = RenderedNoteOffStep(c.note, c.octave)
+        val es  = Vector(on, off)
+        (idx, es)
+      }
+      RenderedChannel(ss)
 
-  implicit val synthChannelRenderer: ChannelRenderer[SynthChannel] =
-    new ChannelRenderer[SynthChannel]:
-      override def render(c: SynthChannel): RenderedChannel =
-        val ss = c.steps.flatMap { case (idx, step) =>
-          // new events, with their index
-          val nix = idx + step.duration
-          val on  = RenderedNoteStep(step.note, step.octave, step.velocity)
-          val off = RenderedNoteOffStep(step.note, step.octave)
-          Vector(idx -> on, nix -> off)
-            .groupBy(_._1)
-            .map { case (k, v) => k -> v.map { case (_, x) => x } }
+  given ChannelRenderer[SynthChannel] with
+    override def render(c: SynthChannel): RenderedChannel =
+      val ss = c.steps.flatMap { case (idx, step) =>
+        // new events, with their index
+        val nix = idx + step.duration
+        val on  = RenderedNoteStep(step.note, step.octave, step.velocity)
+        val off = RenderedNoteOffStep(step.note, step.octave)
+        Vector(idx -> on, nix -> off)
+          .groupBy(_._1)
+          .map { case (k, v) =>
+            k -> v.map { case (_, x) =>
+              x
+            }
+          }
 
-        }
-        RenderedChannel(ss)
-
+      }
+      RenderedChannel(ss)

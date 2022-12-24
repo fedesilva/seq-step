@@ -35,7 +35,7 @@ package object api:
     def apply[T](): SortedIntMap[T] = SortedMap[Int, T]()
 
   /** Allowed values range for midi values: 0 to 127 */
-  type MIDIRange = And[GreaterEqual[0], LessEqual[127]]
+  type MIDIRange = GreaterEqual[0] And LessEqual[127]
 
   /** Midi Value Int with correct range */
   type MIDIValue = Int Refined MIDIRange
@@ -44,7 +44,7 @@ package object api:
   def midiint(i: Int): Either[String, MIDIValue] = refineV[MIDIRange](i)
 
   /** Allowed values range for midi octaves */
-  type OctaveRange = And[GreaterEqual[0], LessEqual[10]]
+  type OctaveRange = GreaterEqual[0] And LessEqual[10]
 
   /** An octave value is an int within the midi octave range: 0 to 10 */
   type Octave = Int Refined OctaveRange
@@ -55,7 +55,7 @@ package object api:
   val DefaultOctave = 1.refined[OctaveRange]
 
   /** Allowed step length values range for tracks step length */
-  type StepLengthRange = And[GreaterEqual[1], LessEqual[256]]
+  type StepLengthRange = GreaterEqual[1] And LessEqual[256]
 
   /** Step length value within defined range: 1 to 256 */
   type StepLength = Int Refined StepLengthRange

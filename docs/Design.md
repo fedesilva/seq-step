@@ -3,15 +3,12 @@
 # Structures and types overview
 
     Sequencer
-
-      * Pattern
     
-        * Track
-      
-          * Channel [SynthChannel|DrumChannel]
-
-         
-            * Event [NoteEvent|DrumEvent]
+        - Track
+          - Channel* [SynthChannel|DrumChannel]
+          - Pattern
+            - Event
+          
 
 ## Sequencer
       

@@ -7,15 +7,18 @@ lazy val root = (project in file("."))
       scalaVersion := "3.2.1",
       version := "0.1.0-SNAPSHOT"
     )),    
-    Global / onChangedBuildSource := ReloadOnSourceChanges,  
+    //Global / onChangedBuildSource := ReloadOnSourceChanges,  
     name := "SeqStep",
     libraryDependencies ++= runtimeDeps ++ testDeps,
     scalacOptions ++= Seq(
-      // "-new-syntax",                       // Enforce new syntax 
-      "-indent",
-      "-rewrite",
+      "-Werror",
+      "-print-lines",
+      "-deprecation",
+      "-explaintypes",
       "-language:strictEquality",
-      "-explain"
+      "-explain",
+      "-new-syntax", // Enforce new syntax, rewrite stuff if paired with -rewrite
+      "-rewrite",
     )
   )
 

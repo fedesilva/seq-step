@@ -22,10 +22,9 @@ object Sequencer:
 
   /** A sequencer with default tracks */
   def initialized: Sequencer =
-
     val seq = Sequencer()
     (1 to 2).flatMap(i => midiint(i).toOption).foldLeft(seq) { (s, v) =>
-      if (v.value > 1)
+      if v.value > 1 then
         s.addTrack[SynthTrack](0, v).fold(x => { println(x); s }, identity)
       else
         s.addTrack[DrumTrack](0, v).fold(x => { println(x); s }, identity)
@@ -40,7 +39,7 @@ object Sequencer:
       Try(seq.patterns(patIndex))
         .map { p =>
           val t   = TrackMaker.make(midiChannel)
-          val key = if (p.tracks.isEmpty) 1 else p.tracks.keySet.max + 1
+          val key = if p.tracks.isEmpty then 1 else p.tracks.keySet.max + 1
           // FIXME EEEEEK, use monocle
           val pt = p.copy(tracks = p.tracks + (key -> t))
           val ps = seq.patterns + (patIndex -> pt)
